@@ -22,8 +22,8 @@ mongoose
 
 const userOne = new userModel({
   name: "Marc Kirk",
-  email: "marcakirk@gmail.com",
-  password: "w$alSxmk!x()-()",
+  email: "    marcakirk@gmail.com   ",
+  password: "w$alSx!mk014c3550()()-",
 });
 
 userOne
@@ -35,18 +35,18 @@ userOne
     console.log("Error: Could not save user!!", e);
   });
 
-const jobOne = new jobModel({
-  description: "Complete final year computer science project",
-});
-
-jobOne
-  .save()
-  .then((job) => {
-    console.log(job, " has been saved");
-  })
-  .catch((e) => {
-    console.log("Error: Could not save job!!", e);
-  });
+// const jobOne = new jobModel({
+//   description: "Complete final year computer science project",
+// });
+//
+// jobOne
+//   .save()
+//   .then((job) => {
+//     console.log(job, " has been saved");
+//   })
+//   .catch((e) => {
+//     console.log("Error: Could not save job!!", e);
+//   });
 
 // const Cat = mongoose.model('Cat', { name: String });
 //
