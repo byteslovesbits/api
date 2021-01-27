@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const userModel = require("./models/userModel");
-const jobModel = require("./models/job");
 
 mongoose
   .connect("mongodb://localhost/api", {
@@ -20,20 +18,20 @@ mongoose
 // const kitty = new Cat({ name: 'paws' });
 // kitty.save().then(() => console.log(`Little ${kitty.name} saved to the database.`));
 
-const userOne = new userModel({
-  name: "Marc Kirk",
-  email: "    marcakirk@gmail.com   ",
-  password: "w$alSx!mk014c3550()()-",
-});
+// const userOne = new userModel({
+//   name: "Marc Kirk",
+//   email: "    marcakirk@gmail.com   ",
+//   password: "w$alSx!mk014c3550()()-",
+// });
 
-userOne
-  .save()
-  .then((user) => {
-    console.log(user, " has been saved");
-  })
-  .catch((e) => {
-    console.log("Error: Could not save user!!", e);
-  });
+// userOne
+//   .save()
+//   .then((user) => {
+//     console.log(user, " has been saved");
+//   })
+//   .catch((e) => {
+//     console.log("Error: Could not save user!!", e);
+//   });
 
 // const jobOne = new jobModel({
 //   description: "Complete final year computer science project",
