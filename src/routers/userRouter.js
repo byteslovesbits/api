@@ -39,4 +39,35 @@ userRouter.get("/users/:id", async (req, res) => {
   }
 });
 
+// UPDATE UPDATE UPDATE
+userRouter.patch("/users/:id", async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      runValidators: true,
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).send();
+    }
+
+    return res.send(updatedUser);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+// DELETE DELETE DELETE
+userRouter.delete("/users/:id", async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedUser) {
+      return res.status(404).send();
+    }
+    res.send(deletedUser);
+  } catch (error) {
+    res.status(400).send();
+  }
+});
+
 module.exports = userRouter;

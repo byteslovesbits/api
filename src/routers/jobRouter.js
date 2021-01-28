@@ -39,4 +39,35 @@ jobRouter.get("/jobs/:id", async (req, res) => {
   }
 });
 
+// UPDATE UPDATE UPDATE
+jobRouter.patch("/jobs/:id", async (req, res) => {
+  try {
+    const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, {
+      runValidators: true,
+      new: true,
+    });
+    if (!updatedJob) {
+      res.status(404).send();
+    }
+    res.send(updatedJob);
+  } catch (error) {
+    res.status(400).send();
+  }
+});
+
+// DELETE DELETE DELETE
+jobRouter.delete("/jobs/:id", async (req, res) => {
+  try {
+    const deletedJob = await Job.findByIdAndDelete(req.params.id);
+    if (!deletedJob) {
+      return res.status(404).send();
+    }
+    res.send(deletedJob);
+  } catch (error) {
+    res.status(400).send();
+  }
+
+  const deletedJob = await Job.findByIdAndDelete(req.params.id);
+});
+
 module.exports = jobRouter;
