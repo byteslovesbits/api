@@ -17,6 +17,6 @@ const jobSchema = new mongoose.Schema({
 // MODELS
 // An instance of a model is called a document. Models are responsible for creating and reading documents from the underlying MongoDB database.
 
-const JobModel = mongoose.model("JobModel", jobSchema);
+const JobModel = mongoose.model("Job", jobSchema);
 
 module.exports = JobModel;
