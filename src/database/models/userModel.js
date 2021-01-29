@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
 // SCHEMA
 // A schema defines and maps the shape of a document within a mongodb collection.
 
@@ -36,6 +37,21 @@ const userSchema = new mongoose.Schema({
       }
     },
   },
+});
+
+userSchema.pre("save", async function (next) {
+  // this binds to the user.
+  // NOTE: We cannot use arrow functions in mongoose middle ware as they do not bind this
+  const user = this;
+  console.log("Middleware active right before saving...");
+
+  if (user.isModified("password")) {
+    // The salt cannot be too short or too long. To long and it will take forever to generate a hashed password.
+    // If the salt is too short it is easier to break the hash
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+  // We must call next() or the middleware will just hang and the request will eventually timeout!
+  next();
 });
 
 // MODELS

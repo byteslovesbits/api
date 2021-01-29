@@ -41,17 +41,36 @@ userRouter.get("/users/:id", async (req, res) => {
 
 // UPDATE UPDATE UPDATE
 userRouter.patch("/users/:id", async (req, res) => {
+  // Provide a better validation response to the client if they attempt to update invalid properties
+  // If an incoming update is not in the permitted updates list then throw an error
+
+  const updatesRequested = Object.keys(req.body);
+  const permittedUpdates = ["name", "email", "password"];
+
+  const isValidUpdate = updatesRequested.every((update) =>
+    permittedUpdates.includes(update)
+  );
+
+  if (!isValidUpdate) {
+    return res
+      .status(400)
+      .send({ Error: "You have attempted to perform an invalid update!" });
+  }
+
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-      runValidators: true,
-      new: true,
-    });
+    const updatedUser = await User.findById(req.params.id);
+    updatesRequested.forEach(
+      (requestedUpdate) =>
+        (updatedUser[requestedUpdate] = req.body[requestedUpdate])
+    );
+
+    await updatedUser.save();
 
     if (!updatedUser) {
-      return res.status(404).send();
+      return res.status(404).send({ Error: "User not found!" });
     }
 
-    return res.send(updatedUser);
+    res.send(updatedUser);
   } catch (error) {
     res.status(400).send(error);
   }
