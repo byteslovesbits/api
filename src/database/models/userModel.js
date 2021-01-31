@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 // SCHEMA
 // A schema defines and maps the shape of a document within a mongodb collection.
 
@@ -37,8 +39,29 @@ const userSchema = new mongoose.Schema({
       }
     },
   },
+  jsonWebTokens: [
+    {
+      jwt: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
+// INSTANCE METHODS
+userSchema.methods.makeJWT = async function () {
+  const user = this;
+  const jsonWebToken = jwt.sign(
+    { _id: user._id.toString() },
+    "bscomputersciencefinalyearproject"
+  );
+  user.jsonWebTokens = user.jsonWebTokens.concat({ jwt: jsonWebToken });
+  await user.save();
+  return jsonWebToken;
+};
+
+// MIDDLEWARE
 userSchema.pre("save", async function (next) {
   // this binds to the user.
   // NOTE: We cannot use arrow functions in mongoose middle ware as they do not bind this
@@ -53,6 +76,22 @@ userSchema.pre("save", async function (next) {
   // We must call next() or the middleware will just hang and the request will eventually timeout!
   next();
 });
+
+// STATICS
+userSchema.statics.findByEmailAndPassword = async function (email, password) {
+  // First check if a user with the email actually exists
+  const user = await User.findOne({ email: email });
+  if (!user) {
+    throw new Error("Error: Login Failed!");
+  }
+
+  // Compare users password with the hashed password
+  const isCorrectPassword = await bcrypt.compare(password, user.password);
+  if (!isCorrectPassword) {
+    throw new Error("Error: 'Login Failed!'");
+  }
+  return user;
+};
 
 // MODELS
 // An instance of a model is called a document. Models are responsible for creating and reading documents from the underlying MongoDB database.

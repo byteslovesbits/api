@@ -8,10 +8,24 @@ userRouter.post("/users", async (req, res) => {
   const user = new User(req.body);
   try {
     await user.save();
+    const token = await user.makeJWT();
     // 201 is semantically a creation code -
-    res.status(201).send(user);
+    res.status(201).send({ user, token });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send();
+  }
+});
+
+userRouter.post("/users/login", async (req, res) => {
+  try {
+    const user = await User.findByEmailAndPassword(
+      req.body.email,
+      req.body.password
+    );
+    const token = await user.makeJWT();
+    res.send({ user, token });
+  } catch (error) {
+    res.status(400).send();
   }
 });
 
