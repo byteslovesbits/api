@@ -61,6 +61,15 @@ userSchema.methods.makeJWT = async function () {
   return jsonWebToken;
 };
 
+userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
+
+  delete userObject.password;
+  delete userObject.jsonWebTokens;
+
+  return userObject;
+};
 // MIDDLEWARE
 userSchema.pre("save", async function (next) {
   // this binds to the user.
