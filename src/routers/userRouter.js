@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const User = require("../database/models/userModel");
 const authenticateUser = require("../middleware/authenticateUser");
 
@@ -26,7 +27,7 @@ userRouter.post("/users/login", async (req, res) => {
     const jwt = await user.makeJWT();
     res.send({ user, jwt: jwt });
   } catch (error) {
-    res.status(400).send();
+    res.status(401).send(error);
   }
 });
 
@@ -38,8 +39,8 @@ userRouter.post("/users/logout", authenticateUser, async (req, res) => {
     await req.user.save();
 
     res.send(user);
-  } catch (e) {
-    res.status(500).send();
+  } catch (error) {
+    res.status(500).send(error);
   }
 });
 
@@ -146,5 +147,9 @@ userRouter.delete("/users/myProfile", authenticateUser, async (req, res) => {
 //     res.status(500).send(error);
 //   }
 //
+
+userRouter.get("/test", (req, res, next) => {
+  res.send({ key: "Value" });
+});
 
 module.exports = userRouter;
